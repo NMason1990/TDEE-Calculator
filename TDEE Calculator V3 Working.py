@@ -1,62 +1,110 @@
-import math
-import builtins
 
-# override the input() function to convert all input strings to lowercase
-def input(prompt):
-    return builtins.input(prompt).lower()
+"""
+This function calculates TDEE using the Mifflin-St. Jeor Equation.
+
+Parameters:
+weight (float): Weight of the person in kilograms.
+height (float): Height of the person in centimeters.
+age (int): Age of the person in years.
+gender (str): Gender of the person, either "male" or "female".
+activity_level (float): Activity level of the person, ranging from 1.2 to 1.9.
+
+Returns:
+float: The TDEE of the person.
+"""
+def calculate_tdee(gender, age, weight, height, activity_level):
+    # Convert weight from pounds to kilograms
+    weight = weight / 2.205
+
+    # Convert height from inches to meters
+    height = height / 39.37
+
+    if gender == "male":
+        bmr = 88.362 + (13.397 * weight) + (4.799 * height * 100) - (5.677 * age)
+    elif gender == "female":
+        bmr = 447.593 + (9.247 * weight) + (3.098 * height * 100) - (4.330 * age)
+
+    if activity_level == "sedentary":
+        tdee = bmr * 1.2
+    elif activity_level == "lightly active":
+        tdee = bmr * 1.375
+    elif activity_level == "moderately active":
+        tdee = bmr * 1.55
+    elif activity_level == "very active":
+        tdee = bmr * 1.725
+    elif activity_level == "extra active":
+        tdee = bmr * 1.9
+
+    return tdee
+
+    
+    if not (20 <= age <= 100):
+        raise ValueError("Invalid age. Age must be between 20 and 100.")
+
+    if not (140 <= height <= 220):
+        raise ValueError("Invalid height. Height must be between 140 and 220 centimeters.")
+
+    if not (20 <= weight <= 250):
+        raise ValueError("Invalid weight. Weight must be between 20 and 250 kilograms.")
+
+    if gender.lower() not in ["male", "female"]:
+        raise ValueError("Invalid gender. Gender must be either 'male' or 'female'.")
+
+    bmr = 10 * weight + 6.25 * height - 5 * age
+    if gender.lower() == "male":
+        bmr += 5
+    else:
+        bmr -= 161
+
+    tdee = bmr * activity_level
+    return tdee
+
 
 def main():
-    sex = input("Are you Male or Female?")
-    if sex == "male":
-        print(bmr_male() * tdee())    
-    else:
-        print(bmr_female() * tdee())
+    print("Welcome to the TDEE calculator!")
+    while True:
+        try:
+            weight = float(input("Enter your weight in kilograms: "))
+            height = float(input("Enter your height in centimeters: "))
+            age = int(input("Enter your age in years: "))
+            gender = input("Enter your gender (male or female): ")
+            while True:
+                print("\nPlease select your activity level:")
+                print("1 - Sedentary (little to no exercise)")
+                print("2 - Light Activity (light exercise/sports 1-3 days a week)")
+                print("3 - Moderate Activity (moderate exercise/sports 3-5 days a week)")
+                print("4 - Very Active (hard exercise/sports 6-7 days a week)")
+                print("5 - Super Active (very hard exercise/sports, physical job or training)")
+                activity_level = int(input("Enter the number corresponding to your activity level (1-5): "))
+                
+                if activity_level not in ["1", "2", "3", "4", "5"]:
+                    print("Error: Invalid input. Please enter a number between 1 and 5.")
+                else:
+                    if activity_level == "1":
+                        activity_level = "sedentary"
+                        explanation = "little to no exercise"
+                    elif activity_level == "2":
+                        activity_level = "lightly active"
+                        explanation = "light exercise/sports 1-3 days a week"
+                    elif activity_level == "3":
+                        activity_level = "moderately active"
+                        explanation = "moderate exercise/sports 3-5 days a week"
+                    elif activity_level == "4":
+                        activity_level = "very active"
+                        explanation = "hard exercise/sports 6-7 days a week"
+                    elif activity_level == "5":
+                        activity_level = "extra active"
+                        explanation = "very hard exercise/sports, physical job or training"
+                    print(f"You have selected {activity_level.title()} ({explanation}).")
+                    break
 
-#weight in kg, height in cm
-#function for male bmr
-def bmr_male():
-    age = float(input("What is your age?"))
-    weight = float(input("What is your weight in kg?"))
-    height = float(input("What is your height in cm?"))
-    return 10 * weight + 6.25 * height - 5 * age + 5
+            tdee = calculate_tdee(weight, height, age, gender, activity_level)
 
-#weight in kg, height in cm
-#function for female bmr
-def bmr_female():
-    age = float(input("What is your age?"))
-    weight = float(input("What is your weight in kg?"))
-    height = float(input("What is your height in cm?"))
-    return 10 * weight + 6.25 * height - 5 * age - 161
+            print(f"\nYour TDEE is {tdee:.2f} calories per day.")
+            break
 
-# asking for activity level and using if statements to choose what those options represent.
-def tdee():
-    activness = float(input("Choose activity level from the following.\nFor sedentary - desk job and little to no exercise enter 1.\n\
-    For light - exercise 1 to 3 days per week enter 2.\nFor moderate - exercise 3 to 5 days per week enter 3.\n\
-    For hard - exercise 6 to 7 days per week enter 4.\nFor extremely - daily exercise and physical job or training enter 5."))   
-    if activness == 1:
-        return 1 * 1.2
-    elif activness == 2:
-        return 1 * 1.375
-    elif activness == 3:
-        return 1 * 1.55
-    elif activness == 4:
-        return 1 * 1.725
-    elif activness == 5:
-        return 1 * 1.9
-    
+        except ValueError as error:
+            print(f"Invalid input: {error}. Please try again.\n")
+
+
 main()
-
-
-
-
-      
-
-
-
-
-     
-
-
-
-    
-
