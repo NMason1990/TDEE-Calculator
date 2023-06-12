@@ -37,37 +37,24 @@ def calculate_tdee(gender, age, weight, height, activity_level):
 
     return tdee
 
-    
-    if not (20 <= age <= 100):
-        raise ValueError("Invalid age. Age must be between 20 and 100.")
-
-    if not (140 <= height <= 220):
-        raise ValueError("Invalid height. Height must be between 140 and 220 centimeters.")
-
-    if not (20 <= weight <= 250):
-        raise ValueError("Invalid weight. Weight must be between 20 and 250 kilograms.")
-
-    if gender.lower() not in ["male", "female"]:
-        raise ValueError("Invalid gender. Gender must be either 'male' or 'female'.")
-
-    bmr = 10 * weight + 6.25 * height - 5 * age
-    if gender.lower() == "male":
-        bmr += 5
-    else:
-        bmr -= 161
-
-    tdee = bmr * activity_level
-    return tdee
-
-
 def main():
     print("Welcome to the TDEE calculator!")
     while True:
         try:
             weight = float(input("Enter your weight in kilograms: "))
+            if not (20 <= weight <= 250):
+                raise ValueError("Invalid weight. Weight must be between 20 and 250 kilograms.")
             height = float(input("Enter your height in centimeters: "))
+            if not (140 <= height <= 220):
+                raise ValueError("Invalid height. Height must be between 140 and 220 centimeters.")
             age = int(input("Enter your age in years: "))
+            if not (20 <= age <= 100):
+                raise ValueError("Invalid age. Age must be between 20 and 100.")
             gender = input("Enter your gender (male or female): ")
+            if gender.lower() not in ["male", "female"]:
+                raise ValueError("Invalid gender. Gender must be either 'male' or 'female'.")
+            
+
             while True:
                 print("\nPlease select your activity level:")
                 print("1 - Sedentary (little to no exercise)")
@@ -75,7 +62,7 @@ def main():
                 print("3 - Moderate Activity (moderate exercise/sports 3-5 days a week)")
                 print("4 - Very Active (hard exercise/sports 6-7 days a week)")
                 print("5 - Super Active (very hard exercise/sports, physical job or training)")
-                activity_level = int(input("Enter the number corresponding to your activity level (1-5): "))
+                activity_level = str(input("Enter the number corresponding to your activity level (1-5): "))
                 
                 if activity_level not in ["1", "2", "3", "4", "5"]:
                     print("Error: Invalid input. Please enter a number between 1 and 5.")
@@ -97,14 +84,5 @@ def main():
                         explanation = "very hard exercise/sports, physical job or training"
                     print(f"You have selected {activity_level.title()} ({explanation}).")
                     break
-
-            tdee = calculate_tdee(weight, height, age, gender, activity_level)
-
-            print(f"\nYour TDEE is {tdee:.2f} calories per day.")
-            break
-
-        except ValueError as error:
-            print(f"Invalid input: {error}. Please try again.\n")
-
 
 main()
